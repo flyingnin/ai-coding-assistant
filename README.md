@@ -42,6 +42,48 @@ This extension bridges VS Code with a powerful AI backend that uses:
 - GAT for codebase analysis
 - GitHub for continuous learning
 
+## Backend Features
+
+- Integration with multiple language models including Mistral-7B-Instruct
+- Environment-based configuration for API keys
+- Vector search with FAISS for concept retrieval
+- Persistent memory with ChromaDB
+- LangGraph-based workflow for agent orchestration
+
+## Backend Setup
+
+1. **Install dependencies**
+
+```bash
+pip install -r requirements.txt
+```
+
+2. **Configure environment variables**
+
+Rename the `.env.example` file to `.env` and fill in your API keys:
+
+```env
+API_KEY=your_api_key_here
+MODEL=Mistral-7B-Instruct
+API_BASE_URL=https://your-api-url.com/api/v1
+```
+
+3. **Run the server**
+
+```bash
+python backend.py
+```
+
+The server will start on http://localhost:8000
+
+## Architecture
+
+The system uses a multi-step workflow:
+1. FAISS search for concept retrieval
+2. Memory retrieval from ChromaDB
+3. Reasoning using the LLM with both search results as context
+4. Code generation and project management using LangGraph
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
