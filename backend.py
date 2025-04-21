@@ -25,12 +25,20 @@ faiss_store = FAISS.from_texts(["Initial placeholder"], embedding_model)
 
 # Vector memory is handled by ChromaDB (persistent vector storage)
 
+# Get model names from environment variables
+coder_model_name = os.getenv("OPENROUTER_MODEL_CODER", "phind/phind-codellama-34b")
+viewer_model_name = os.getenv("OPENROUTER_MODEL_VIEWER", "mistralai/mistral-7b-instruct:free")
+
 # Coder Agent: Generates initial prompts using Reasoning + Act and Prompt Reflection
-llm = OpenRouter(model="meta-llama/Llama-2-7b-chat-hf:free")
-coder_agent = create_react_agent(llm, tools=[])
+# Using Phind-CodeLlama-34B model
+coder_llm = OpenRouter(model=coder_model_name)
+coder_agent = create_react_agent(coder_llm, tools=[])
 coder_executor = AgentExecutor(agent=coder_agent, tools=[])
 
 # Viewer Agent: Monitors progress and refines prompts using GAT
+# Using Mistral 7B Instruct Free model
+viewer_llm = OpenRouter(model=viewer_model_name)
+
 class GATModel(torch.nn.Module):
     def __init__(self):
         super(GATModel, self).__init__()
@@ -72,7 +80,8 @@ def generate_initial_prompt(goal: str) -> str:
 
 def reflect_on_prompt(prompt: str) -> str:
     # Prompt Reflection: Enhance clarity and actionability
-    reflection = llm(f"Refine this prompt to be more specific and actionable: {prompt}")
+    # Using Viewer LLM (Mistral) for reflection
+    reflection = viewer_llm(f"Refine this prompt to be more specific and actionable: {prompt}")
     return reflection
 
 # Viewer Agent functions
