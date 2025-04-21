@@ -39,6 +39,25 @@
             <button id="startButton" class="primary-button">Start Project</button>
         </div>
 
+        <div class="chat-interface">
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcome-message">
+                    <h2>Welcome to AI Coding Assistant</h2>
+                    <p>Start a project or send a message to begin</p>
+                </div>
+                <!-- Chat messages will appear here -->
+            </div>
+            
+            <div class="chat-input-container">
+                <textarea id="chatInput" placeholder="Type a message to the AI agent..." rows="2"></textarea>
+                <button id="sendButton" class="send-button" title="Send message">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 12L22 2L12 22L10 14L2 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
         <div class="performance-panel">
             <h2>Performance Metrics</h2>
             <div class="metrics-container">
@@ -55,11 +74,6 @@
                     <span id="modelName" class="metric-value">Mistral-7B-Instruct</span>
                 </div>
             </div>
-        </div>
-
-        <div class="output-panel">
-            <h2>AI Agent Output</h2>
-            <div id="promptsContainer" class="prompts-container"></div>
         </div>
 
         <div class="status-bar">

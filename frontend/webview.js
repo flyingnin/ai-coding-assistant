@@ -4,7 +4,9 @@
     const goalInput = document.getElementById('goalInput');
     const projectInput = document.getElementById('projectInput');
     const pathInput = document.getElementById('pathInput');
-    const promptsContainer = document.getElementById('promptsContainer');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendButton = document.getElementById('sendButton');
     const modeToggle = document.getElementById('modeToggle');
     const modeLabel = document.getElementById('modeLabel');
     const connectionStatus = document.getElementById('connectionStatus');
@@ -20,6 +22,7 @@
     let ws = null;
     let isGitLearningMode = false;
     let startTime = 0;
+    let isWaitingForResponse = false;
 
     // Acquired from VS Code extension API
     const vscode = acquireVsCodeApi();
@@ -33,11 +36,14 @@
         ws.onopen = () => {
             updateConnectionStatus('online');
             clearError();
+            
+            // Add initial system message
+            addChatMessage("Hello! I'm your AI coding assistant. You can start a project or ask me questions about coding.", 'assistant');
         };
         
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            addPromptToUI(data.prompt || data.message, data);
+            handleAIResponse(data);
             updatePerformanceMetrics(data);
         };
         
@@ -50,7 +56,7 @@
             updateConnectionStatus('offline');
             // Try to reconnect after 5 seconds
             setTimeout(() => {
-                if (ws.readyState === WebSocket.CLOSED) {
+                if (ws && ws.readyState === WebSocket.CLOSED) {
                     initWebSocket();
                 }
             }, 5000);
@@ -87,19 +93,82 @@
         errorMessage.style.display = 'none';
     }
 
-    // Add a prompt to the UI
-    function addPromptToUI(prompt, data = {}) {
-        const promptElement = document.createElement('div');
-        promptElement.className = 'prompt-item';
-        promptElement.textContent = prompt;
-
-        // If there's any additional data, we could show it or use it
-        if (data.type) {
-            promptElement.dataset.type = data.type;
+    // Add a message to the chat UI
+    function addChatMessage(message, sender, data = {}) {
+        // Remove welcome message if it exists
+        const welcomeMessage = chatMessages.querySelector('.welcome-message');
+        if (welcomeMessage) {
+            chatMessages.removeChild(welcomeMessage);
         }
+        
+        // Remove typing indicator if it exists
+        const typingIndicator = chatMessages.querySelector('.typing-indicator');
+        if (typingIndicator) {
+            chatMessages.removeChild(typingIndicator);
+        }
+        
+        const messageElement = document.createElement('div');
+        messageElement.className = `message ${sender}`;
+        
+        // Format code blocks if any
+        let formattedMessage = message;
+        if (sender === 'assistant') {
+            formattedMessage = formatMessageWithCodeBlocks(message);
+        }
+        
+        messageElement.innerHTML = formattedMessage;
+        
+        chatMessages.appendChild(messageElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // If this is an assistant message, stop waiting for response
+        if (sender === 'assistant') {
+            isWaitingForResponse = false;
+            sendButton.disabled = false;
+            chatInput.disabled = false;
+        }
+    }
+    
+    // Format message with code blocks
+    function formatMessageWithCodeBlocks(message) {
+        // Simple code block detection for demonstration
+        // In a real implementation, you might want to use a more robust parser
+        const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
+        let formattedMessage = message.replace(codeBlockRegex, function(match, language, code) {
+            const lang = language || '';
+            return `<pre><code class="language-${lang}">${escapeHtml(code.trim())}</code></pre>`;
+        });
+        
+        // Format inline code
+        const inlineCodeRegex = /`([^`]+)`/g;
+        formattedMessage = formattedMessage.replace(inlineCodeRegex, '<code>$1</code>');
+        
+        return formattedMessage;
+    }
+    
+    // Escape HTML to prevent XSS
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+    
+    // Show typing indicator
+    function showTypingIndicator() {
+        const typingElement = document.createElement('div');
+        typingElement.className = 'message assistant typing-indicator';
+        typingElement.innerHTML = '<span></span><span></span><span></span>';
+        chatMessages.appendChild(typingElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 
-        promptsContainer.appendChild(promptElement);
-        promptsContainer.scrollTop = promptsContainer.scrollHeight;
+    // Handle AI response
+    function handleAIResponse(data) {
+        const message = data.prompt || data.message || 'No response from AI';
+        addChatMessage(message, 'assistant', data);
     }
 
     // Update performance metrics
@@ -151,6 +220,16 @@
         // Record start time for response time calculation
         startTime = Date.now();
         
+        // Show user's project request in chat
+        const userMessage = `Start project "${projectInput.value.trim()}" with goal: ${goalInput.value.trim()}`;
+        addChatMessage(userMessage, 'user');
+        
+        // Show typing indicator
+        showTypingIndicator();
+        
+        // Set waiting for response
+        isWaitingForResponse = true;
+        
         // Prepare the request data
         const requestData = {
             goal: goalInput.value.trim(),
@@ -173,21 +252,65 @@
             }
             return response.json();
         })
-        .then(data => {
-            addPromptToUI(`Project started: ${requestData.project}`);
-        })
         .catch(error => {
             showError(`Failed to start project: ${error.message}`);
+            isWaitingForResponse = false;
+            
+            // Remove typing indicator
+            const typingIndicator = chatMessages.querySelector('.typing-indicator');
+            if (typingIndicator) {
+                chatMessages.removeChild(typingIndicator);
+            }
         })
         .finally(() => {
             startButton.disabled = false;
         });
     }
 
+    // Send a chat message to the AI
+    function sendChatMessage() {
+        const message = chatInput.value.trim();
+        if (!message || isWaitingForResponse) return;
+        
+        // Clear the input
+        chatInput.value = '';
+        
+        // Add the message to the chat
+        addChatMessage(message, 'user');
+        
+        // Show typing indicator
+        showTypingIndicator();
+        
+        // Disable input while waiting for response
+        sendButton.disabled = true;
+        chatInput.disabled = true;
+        isWaitingForResponse = true;
+        
+        // Record start time for response time calculation
+        startTime = Date.now();
+        
+        // Send the message to the WebSocket
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({
+                message: message,
+                git_learning_mode: isGitLearningMode
+            }));
+        } else {
+            showError('WebSocket connection lost. Trying to reconnect...');
+            initWebSocket();
+            isWaitingForResponse = false;
+            sendButton.disabled = false;
+            chatInput.disabled = false;
+        }
+    }
+
     // Toggle between Git Learning Mode and Project Working Mode
     function toggleMode() {
         isGitLearningMode = modeToggle.checked;
         modeLabel.textContent = isGitLearningMode ? 'Git Learning Mode' : 'Project Working Mode';
+        
+        // Add mode change notification to chat
+        addChatMessage(`Switched to ${isGitLearningMode ? 'Git Learning Mode' : 'Project Working Mode'}`, 'assistant');
         
         // Save the preference
         vscode.postMessage({
@@ -201,6 +324,15 @@
         // Add event listeners
         startButton.addEventListener('click', startProject);
         modeToggle.addEventListener('change', toggleMode);
+        sendButton.addEventListener('click', sendChatMessage);
+        
+        // Handle Enter key for chat
+        chatInput.addEventListener('keydown', event => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendChatMessage();
+            }
+        });
         
         // Initialize WebSocket connection
         initWebSocket();
@@ -217,7 +349,7 @@
                     break;
                     
                 case 'addPrompt':
-                    addPromptToUI(message.prompt, message.data);
+                    handleAIResponse(message);
                     break;
                     
                 case 'updateMetrics':
@@ -227,6 +359,13 @@
                     }
                     if (message.model) {
                         modelName.textContent = message.model;
+                    }
+                    break;
+                    
+                case 'connectionStatus':
+                    updateConnectionStatus(message.status);
+                    if (message.error) {
+                        showError(message.error);
                     }
                     break;
             }

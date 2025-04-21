@@ -77,6 +77,38 @@ function activate(context) {
                     case 'startProject':
                         // Handle starting a project - will be initiated from the webview
                         break;
+                        
+                    case 'sendChatMessage':
+                        // Handle user chat message - forward to the WebSocket
+                        if (ws && ws.readyState === WebSocket.OPEN) {
+                            try {
+                                ws.send(JSON.stringify({
+                                    message: message.text,
+                                    git_learning_mode: isGitLearningMode
+                                }));
+                            } catch (err) {
+                                console.error('Error sending message to WebSocket:', err);
+                                
+                                if (currentPanel) {
+                                    currentPanel.webview.postMessage({
+                                        command: 'connectionStatus',
+                                        status: 'offline',
+                                        error: 'Failed to send message to backend.'
+                                    });
+                                }
+                            }
+                        } else {
+                            if (currentPanel) {
+                                currentPanel.webview.postMessage({
+                                    command: 'connectionStatus',
+                                    status: 'offline',
+                                    error: 'WebSocket connection not available.'
+                                });
+                            }
+                            // Try to reconnect
+                            initWebSocket();
+                        }
+                        break;
                 }
             },
             undefined,
@@ -156,6 +188,14 @@ function activate(context) {
                     vscode.window.setStatusBarMessage(`AI: ${message.prompt || message.message}`, 5000);
                 } catch (err) {
                     console.error('Error processing WebSocket message:', err);
+                    
+                    if (currentPanel) {
+                        currentPanel.webview.postMessage({
+                            command: 'addPrompt',
+                            prompt: 'Error processing response from AI. Please try again.',
+                            error: true
+                        });
+                    }
                 }
             });
             
