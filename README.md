@@ -1,2 +1,55 @@
-# ai-coding-assistant
-This is a vs code extension that has AI-agents for automation of the entire coding process. This is mainly for people who have no coding experience to use this extension in order to give cursor (or any other IDE) dev like orders, ensuring easy use and filling in the gaps of your coding knowledge by using different AI-agents 
+# AI Coding Assistant
+
+A VS Code extension that harnesses the power of AI agents for automating the coding process, helping users with no coding experience to build software by giving developer-like instructions.
+
+## Features
+
+- **Interactive UI**: Beautiful and easy-to-use interface for working with AI agents
+- **Mode Toggle**: Switch between "Git Learning Mode" and "Project Working Mode"
+- **Performance Tracking**: Monitor token usage and model performance
+- **Real-time Updates**: Connect to AI agents via WebSocket for instant prompts
+- **Custom Projects**: Specify your own codebase path and project details
+
+## Requirements
+
+- VS Code 1.60.0 or higher
+- Backend server running at http://localhost:8000 (FastAPI backend in D:\ai-assistant)
+- Mistral-7B-Instruct model for AI agents
+- FAISS/ChromaDB for vector storage
+- LangGraph for workflows
+
+## Getting Started
+
+1. Launch VS Code
+2. Start the backend server (FastAPI server in D:\ai-assistant)
+3. Press `Ctrl+Shift+P` and run the "AI Coding: Start" command
+4. Fill in your project details in the webview panel
+5. Choose between Git Learning Mode or Project Working Mode
+6. Click "Start Project" to begin
+
+## Configuration
+
+The extension connects to:
+- HTTP API: http://localhost:8000/start
+- WebSocket: ws://localhost:8000/ws
+
+## How It Works
+
+This extension bridges VS Code with a powerful AI backend that uses:
+- Mistral-7B-Instruct for AI agents
+- FAISS/ChromaDB for vector storage
+- LangGraph for workflows
+- GAT for codebase analysis
+- GitHub for continuous learning
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This extension is licensed under the [MIT License](LICENSE).
+
+## More Information
+
+For more details about how to use this extension or to report issues, please visit the [GitHub repository](https://github.com/flyingnin/ai-coding-assistant).

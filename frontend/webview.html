@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Coding Assistant</title>
+    <link rel="stylesheet" href="${styleUri}">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src ws://localhost:8000 http://localhost:8000; script-src ${scriptUri} 'unsafe-inline'; style-src ${styleUri} 'unsafe-inline';">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Coding Assistant</h1>
+            <div class="mode-toggle">
+                <label class="switch">
+                    <input type="checkbox" id="modeToggle">
+                    <span class="slider round"></span>
+                </label>
+                <span id="modeLabel">Project Working Mode</span>
+            </div>
+        </header>
+
+        <div class="settings-panel">
+            <div class="setting-group">
+                <label for="goalInput">Coding Goal:</label>
+                <input type="text" id="goalInput" placeholder="E.g., Build a study tracker app">
+            </div>
+            
+            <div class="setting-group">
+                <label for="projectInput">Project Name:</label>
+                <input type="text" id="projectInput" placeholder="E.g., StudyTracker">
+            </div>
+            
+            <div class="setting-group">
+                <label for="pathInput">Codebase Path:</label>
+                <input type="text" id="pathInput" placeholder="E.g., D:\project">
+            </div>
+            
+            <button id="startButton" class="primary-button">Start Project</button>
+        </div>
+
+        <div class="performance-panel">
+            <h2>Performance Metrics</h2>
+            <div class="metrics-container">
+                <div class="metric">
+                    <span class="metric-label">Tokens Used:</span>
+                    <span id="tokenCount" class="metric-value">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Response Time:</span>
+                    <span id="responseTime" class="metric-value">0 ms</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Model:</span>
+                    <span id="modelName" class="metric-value">Mistral-7B-Instruct</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="output-panel">
+            <h2>AI Agent Output</h2>
+            <div id="promptsContainer" class="prompts-container"></div>
+        </div>
+
+        <div class="status-bar">
+            <div id="connectionStatus" class="status-indicator offline">
+                <span class="status-dot"></span>
+                <span class="status-text">Disconnected</span>
+            </div>
+            <div id="errorMessage" class="error-message"></div>
+        </div>
+    </div>
+    <script src="${scriptUri}"></script>
+</body>
+</html> 
