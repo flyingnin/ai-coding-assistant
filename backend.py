@@ -9,6 +9,11 @@ import torch
 from watchfiles import watch
 import requests
 import json
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = FastAPI()
 
@@ -94,8 +99,12 @@ def learn_from_codebase(directory: str):
     faiss_store.add_texts([code_snippets], metadatas=[{"source": "user_codebase"}])
 
 def learn_from_github():
-    # Fetch example code from GitHub (simplified)
-    response = requests.get("https://api.github.com/search/code?q=python+example")
+    # Get GitHub token from environment variables
+    github_token = os.getenv("GITHUB_TOKEN")
+    headers = {"Authorization": f"token {github_token}"} if github_token else {}
+    
+    # Fetch example code from GitHub with authentication
+    response = requests.get("https://api.github.com/search/code?q=python+example", headers=headers)
     if response.status_code == 200:
         github_code = json.loads(response.text)["items"][0]["html_url"]
         faiss_store.add_texts([github_code], metadatas=[{"source": "github"}])
@@ -117,6 +126,7 @@ async def continuous_learning():
 
 @app.on_event("startup")
 async def startup_event():
+    import asyncio
     asyncio.create_task(continuous_learning())
 
 if __name__ == "__main__":
