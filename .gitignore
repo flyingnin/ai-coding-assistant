@@ -38,4 +38,7 @@ D:/chroma_db/
 chroma_db/
 
 # Logs
-*.log 
+*.log
+
+# Node.js
+node_modules/

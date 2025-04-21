@@ -1,0 +1,20 @@
+{
+    "name": "ai-coding-assistant",
+    "publisher": "flyingnin",
+    "version": "1.0.0",
+    "engines": { "vscode": "^1.60.0" },
+    "activationEvents": ["onCommand:aiCoding.start"],
+    "main": "extension.js",
+    "contributes": {
+      "commands": [
+        { "command": "aiCoding.start", "title": "AI Coding: Start" }
+      ]
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/flyingnin/ai-coding-assistant.git"
+    },
+    "dependencies": {
+      "ws": "^8.0.0"
+    }
+  }

@@ -1,8 +1,12 @@
-# Multi-Agent AI System Backend
+# AI Coding Assistant
 
-A FastAPI-based backend for a multi-agent AI system using OpenRouter and LangChain.
+A VS Code extension with AI-agents for automation of the entire coding process, enhanced with a FastAPI backend for multi-agent AI systems.
 
-## Features
+## About
+
+This is primarily designed for people with little to no coding experience to use this extension in order to give Cursor (or any other IDE) dev-like orders, ensuring easy use and filling in the gaps of your coding knowledge by using different AI-agents.
+
+## Backend Features
 
 - Integration with OpenRouter to access meta-llama/Llama-2-7b-chat-hf
 - Environment-based configuration for API keys
@@ -72,4 +76,4 @@ The system uses a three-step workflow:
 Feel free to extend the system by:
 - Adding more tools to the agent
 - Implementing additional LangGraph nodes
-- Creating new API endpoints for different functionalities 
+- Creating new API endpoints for different functionalities
