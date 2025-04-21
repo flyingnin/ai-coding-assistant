@@ -1,7 +1,7 @@
 from fastapi import FastAPI, WebSocket
 from langchain_community.vectorstores import Chroma, FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.llms import OpenRouter
+from langchain_openai import ChatOpenAI
 from langchain.agents import create_react_agent, AgentExecutor
 import chromadb
 from langgraph.graph import StateGraph, END
@@ -10,10 +10,38 @@ from watchfiles import watch
 import requests
 import json
 import os
+from typing import Optional
 from dotenv import load_dotenv
+from pydantic import Field, SecretStr
+from langchain_core.utils.utils import secret_from_env
 
 # Load environment variables
 load_dotenv()
+
+# Custom OpenRouter class using ChatOpenAI as base
+class OpenRouter(ChatOpenAI):
+    openai_api_key: Optional[SecretStr] = Field(
+        alias="api_key",
+        default_factory=secret_from_env("OPENROUTER_API_KEY", default=None),
+    )
+    
+    @property
+    def lc_secrets(self) -> dict[str, str]:
+        return {"openai_api_key": "OPENROUTER_API_KEY"}
+    
+    def __init__(
+        self,
+        model: str,
+        openai_api_key: Optional[str] = None,
+        **kwargs
+    ):
+        openai_api_key = openai_api_key or os.environ.get("OPENROUTER_API_KEY")
+        super().__init__(
+            model=model,
+            openai_api_key=openai_api_key,
+            base_url="https://openrouter.ai/api/v1",
+            **kwargs
+        )
 
 app = FastAPI()
 
@@ -81,8 +109,8 @@ def generate_initial_prompt(goal: str) -> str:
 def reflect_on_prompt(prompt: str) -> str:
     # Prompt Reflection: Enhance clarity and actionability
     # Using Viewer LLM (Mistral) for reflection
-    reflection = viewer_llm(f"Refine this prompt to be more specific and actionable: {prompt}")
-    return reflection
+    response = viewer_llm.invoke(f"Refine this prompt to be more specific and actionable: {prompt}")
+    return response.content
 
 # Viewer Agent functions
 def analyze_codebase(directory: str) -> str:
