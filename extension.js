@@ -143,7 +143,7 @@ function activate(context) {
         }
         
         try {
-            ws = new WebSocket('ws://localhost:8000/ws');
+            ws = new WebSocket('ws://127.0.0.1:9999/ws');
             
             ws.on('open', () => {
                 // Notify the webview that connection is established

@@ -16,8 +16,8 @@
     const modelName = document.getElementById('modelName');
 
     // Settings
-    const apiEndpoint = 'http://localhost:8000/start';
-    const wsEndpoint = 'ws://localhost:8000/ws';
+    const apiEndpoint = 'http://127.0.0.1:9999/start';
+    const wsEndpoint = 'ws://127.0.0.1:9999/ws';
     let totalTokens = 0;
     let ws = null;
     let isGitLearningMode = false;

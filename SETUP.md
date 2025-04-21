@@ -70,7 +70,7 @@ This guide helps you set up the AI Coding Assistant VS Code extension and its ba
 
 5. Run the backend server:
    ```bash
-   uvicorn main:app --reload --port 8000
+   uvicorn main:app --reload --port 9999
    ```
 
 ## Using the Extension
@@ -79,7 +79,7 @@ This guide helps you set up the AI Coding Assistant VS Code extension and its ba
    ```bash
    cd D:\ai-assistant
    venv\Scripts\activate  # On Windows
-   uvicorn main:app --reload --port 8000
+   uvicorn main:app --reload --port 9999
    ```
 
 2. Open VS Code and start the extension:
@@ -98,7 +98,7 @@ This guide helps you set up the AI Coding Assistant VS Code extension and its ba
 
 ## Troubleshooting
 
-- **Connection Issues**: Ensure the backend server is running at http://localhost:8000
+- **Connection Issues**: Ensure the backend server is running at http://127.0.0.1:9999
 - **WebSocket Errors**: Check that your backend correctly implements the WebSocket protocol
 - **Path Issues**: Ensure file paths are correctly specified in both frontend and backend
 - **UI Not Loading**: Check the VS Code Developer Tools (Help > Toggle Developer Tools) for errors
@@ -192,7 +192,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=9999)
 ```
 
 This file provides a basic starting point for your backend implementation. 

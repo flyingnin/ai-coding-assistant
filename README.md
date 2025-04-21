@@ -13,7 +13,7 @@ A VS Code extension that harnesses the power of AI agents for automating the cod
 ## Requirements
 
 - VS Code 1.60.0 or higher
-- Backend server running at http://localhost:8000 (FastAPI backend in D:\ai-assistant)
+- Backend server running at http://127.0.0.1:9999 (FastAPI backend in D:\ai-assistant)
 - Mistral-7B-Instruct model for AI agents
 - FAISS/ChromaDB for vector storage
 - LangGraph for workflows
@@ -30,8 +30,8 @@ A VS Code extension that harnesses the power of AI agents for automating the cod
 ## Configuration
 
 The extension connects to:
-- HTTP API: http://localhost:8000/start
-- WebSocket: ws://localhost:8000/ws
+- HTTP API: http://127.0.0.1:9999/start
+- WebSocket: ws://127.0.0.1:9999/ws
 
 ## How It Works
 
