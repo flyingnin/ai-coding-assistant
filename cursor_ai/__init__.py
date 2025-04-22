@@ -11,4 +11,4 @@ from cursor_ai.utils.openrouter import OpenRouter
 
 __version__ = "0.1.0"
 
-"""Cursor AI assistant package.""" 
+# Cursor AI assistant package. 
