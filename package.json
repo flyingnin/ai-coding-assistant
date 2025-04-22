@@ -3,12 +3,32 @@
     "publisher": "flyingnin",
     "version": "1.0.0",
     "engines": { "vscode": "^1.60.0" },
-    "activationEvents": ["onCommand:aiCoding.start"],
+    "activationEvents": [
+      "onCommand:aiCoding.start",
+      "onView:aiCodingAssistant"
+    ],
     "main": "extension.js",
     "contributes": {
       "commands": [
         { "command": "aiCoding.start", "title": "AI Coding: Start" }
-      ]
+      ],
+      "viewsContainers": {
+        "activitybar": [
+          {
+            "id": "ai-coding-assistant",
+            "title": "AI Coding Assistant",
+            "icon": "resources/icon.png"
+          }
+        ]
+      },
+      "views": {
+        "ai-coding-assistant": [
+          {
+            "id": "aiCodingAssistant",
+            "name": "AI Coding Assistant"
+          }
+        ]
+      }
     },
     "repository": {
       "type": "git",
@@ -16,5 +36,31 @@
     },
     "dependencies": {
       "ws": "^8.0.0"
-    }
+    },
+    "scripts": {
+      "package": "vsce package",
+      "publish": "vsce publish",
+      "test": "node ./test/runTest.js"
+    },
+    "devDependencies": {
+      "@types/node": "^14.0.0",
+      "@types/vscode": "^1.60.0",
+      "vsce": "^2.15.0"
+    },
+    "displayName": "AI Coding Assistant",
+    "description": "An interactive VS Code extension that uses AI agents to automate coding tasks.",
+    "categories": [
+      "Other",
+      "Programming Languages",
+      "Machine Learning",
+      "Snippets"
+    ],
+    "keywords": [
+      "ai",
+      "coding",
+      "assistant",
+      "code generation",
+      "automation"
+    ],
+    "license": "MIT"
   }
