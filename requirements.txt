@@ -1,14 +1,53 @@
-fastapi>=0.104.0
-uvicorn>=0.24.0
-pydantic>=2.4.2
-langchain>=0.0.300
-langchain-community>=0.0.10
-langchain-openai>=0.0.5
-chromadb>=0.4.18
-faiss-cpu>=1.7.4
-huggingface-hub>=0.18.0
-sentence-transformers>=2.2.2
-langgraph>=0.0.15
+# Core dependencies
 python-dotenv>=1.0.0
-torch>=2.0.0
-openrouter>=0.2.0 
+requests>=2.31.0
+pydantic>=2.4.2
+
+# Automation
+pyautogui>=0.9.54
+keyboard>=0.13.5
+mouse>=0.7.1
+
+# Notification services
+pushover-complete>=1.1.1
+
+# WebSocket support for VS Code extension
+websockets>=11.0.3
+
+# Utilities
+python-dateutil>=2.8.2
+pillow>=10.0.0  # Required for image recognition in pyautogui
+numpy>=1.24.3
+
+# Vector Storage
+chromadb>=0.4.22
+faiss-cpu>=1.7.4  # Vector similarity search
+sentence-transformers>=2.3.0  # For generating embeddings locally
+
+# AI/LLM Components
+langchain>=0.1.0
+langchain-community>=0.0.13
+langchain-core>=0.1.17
+langchain-openai>=0.0.5
+langgraph>=0.0.24
+langchain-fastembed>=0.0.3
+openrouter-python>=0.3.0  # OpenRouter API client
+
+# GUI
+PyQt6>=6.6.1
+PyQt6-WebEngine>=6.6.0
+
+# For optional CLI interface
+argparse>=1.4.0
+
+# Logging
+colorlog>=6.7.0
+
+# Additional
+tiktoken>=0.5.2  # For token counting
+diskcache>=5.6.3  # For local caching
+aiohttp>=3.9.1  # For async HTTP requests
+
+# Context Management System
+uuid>=1.30      # For generating unique IDs
+asyncio>=3.4.3  # For async operations 

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursor AI Assistant</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cursor AI Assistant</h1>
+            <div class="mode-toggle">
+                <label class="switch">
+                    <input type="checkbox" id="modeToggle">
+                    <span class="slider round"></span>
+                </label>
+                <span id="modeLabel">Context Mode</span>
+            </div>
+        </header>
+
+        <div id="standardModeSection" class="settings-panel">
+            <div class="setting-group">
+                <label for="queryInput">Ask a Question:</label>
+                <input type="text" id="queryInput" placeholder="E.g., How do I implement a vector store?">
+            </div>
+            
+            <div class="setting-group">
+                <label for="modelSelect">AI Model:</label>
+                <select id="modelSelect">
+                    <option value="openai/gpt-4">OpenAI GPT-4</option>
+                    <option value="anthropic/claude-3">Anthropic Claude-3</option>
+                    <option value="mistral/mistral-7b">Mistral 7B</option>
+                </select>
+            </div>
+            
+            <button id="askButton" class="primary-button">Ask Question</button>
+        </div>
+
+        <div id="contextModeSection" class="settings-panel" style="display: none;">
+            <div class="context-management">
+                <h3>Context Management</h3>
+                <p>Add files and directories to context to make AI responses more relevant to your codebase.</p>
+                
+                <div class="context-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Files Indexed:</span>
+                        <span id="files-indexed" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Languages:</span>
+                        <span id="languages-count" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Snippets:</span>
+                        <span id="snippets-count" class="stat-value">0</span>
+                    </div>
+                </div>
+                
+                <div class="file-controls">
+                    <div class="file-input-group">
+                        <label for="filePath">File or Directory Path:</label>
+                        <input type="text" id="filePath" placeholder="E.g., D:\project\src">
+                    </div>
+                    <div class="button-group">
+                        <button id="addFileButton" class="secondary-button">Add File</button>
+                        <button id="addDirButton" class="secondary-button">Add Directory</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-interface">
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcome-message">
+                    <h2>Welcome to Cursor AI Assistant</h2>
+                    <p>Ask a question or toggle Context Mode to enhance AI responses with your codebase. The assistant uses code context to provide more accurate and relevant answers.</p>
+                </div>
+                <!-- Chat messages will appear here -->
+            </div>
+            
+            <div class="chat-input-container">
+                <textarea id="chatInput" placeholder="Type a message to the AI assistant..." rows="2"></textarea>
+                <button id="sendButton" class="send-button" title="Send message">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 12L22 2L12 22L10 14L2 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="performance-panel">
+            <h2>Performance Metrics</h2>
+            <div class="metrics-container">
+                <div class="metric">
+                    <span class="metric-label">Tokens Used:</span>
+                    <span id="tokenCount" class="metric-value">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Response Time:</span>
+                    <span id="responseTime" class="metric-value">0 ms</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Context Items:</span>
+                    <span id="contextCount" class="metric-value">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div id="connectionStatus" class="status-indicator offline">
+                <span class="status-dot"></span>
+                <span class="status-text">Disconnected</span>
+            </div>
+            <div id="error-container" class="error-container" style="display: none;">
+                <div id="error-message" class="error-message"></div>
+                <div class="error-troubleshooting">
+                    <p>Troubleshooting tips:</p>
+                    <ol>
+                        <li>Check if the backend service is running</li>
+                        <li>Verify API key configuration</li>
+                        <li>Ensure port 9999 is not blocked by firewall</li>
+                    </ol>
+                    <button id="retry-connection">Retry Connection</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html> 
